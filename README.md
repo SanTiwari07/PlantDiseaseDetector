@@ -1,10 +1,10 @@
-# 🌿 Plant Disease Detector
+# Plant Disease Detector
 
 A deep learning-based system for detecting plant diseases from leaf images using **EfficientNetB3** and transfer learning. This project features a robust image classification model paired with an intuitive, interactive web interface built in Streamlit.
 
 ---
 
-## 📖 Overview
+## Overview
 
 The Plant Disease Detector helps agriculture professionals and enthusiasts accurately identify crop diseases from photographs of plant leaves. The model was trained on a comprehensive dataset encompassing 59 distinct plant and disease classifications, covering vital crops such as Tomato, Wheat, Sugarcane, Soybean, and more. 
 
@@ -80,7 +80,7 @@ The Plant Disease Detector helps agriculture professionals and enthusiasts accur
 
 ---
 
-## ✨ Key Features
+## Key Features
 - **Broad Multi-Crop Coverage:** Identifies agricultural diseases across an array of diverse plant varieties.
 - **Robust Architecture:** Powered by `EfficientNetB3`, utilizing customized top dense layers built for high accuracy classification.
 - **Dataset Augmentation:** Maintains balanced class distribution for resilient, bias-free predictions.
@@ -88,7 +88,7 @@ The Plant Disease Detector helps agriculture professionals and enthusiasts accur
 
 ---
 
-## 🚀 Installation & Usage
+## Installation & Usage
 
 ### 1. Requirements
 Ensure you have Python 3.x installed. The required packages for running the local interface are:
@@ -109,7 +109,7 @@ Upload any supported leaf image (`.jpg`, `.png`) to the dashboard to receive the
 
 ---
 
-## 🧠 Model Architecture & Training
+## Model Architecture & Training
 
 The architecture uses **EfficientNetB3** (pretrained on ImageNet) to extract deep visual features from leaf samples.
 
@@ -141,7 +141,7 @@ The model yields robust diagonal accuracy across its Confusion Matrix, showcasin
 
 ---
 
-## 📦 Model Export
+## Model Export
 
 The optimized model weights are strictly saved on disk under the `.keras` format format. Code block syntax representation:
 
