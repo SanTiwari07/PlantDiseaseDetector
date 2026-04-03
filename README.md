@@ -1,72 +1,122 @@
 # Plant Disease Detector
 
-This repository contains the dataset and model for detecting plant diseases from images.
+A deep learning-based system for detecting plant diseases from leaf images using EfficientNetB3 and transfer learning.
+
+---
 
 ## Dataset Overview
 
-- **Total folders with images:** 59
-- **Total images found:** 40,238
+- Total Classes: 59  
+- Total Images: 40,238  
+- Images per Class: ~700 (balanced dataset)
 
-## Class Distribution
+### Key Features
+- Multi-crop dataset (Tomato, Wheat, Sugarcane, Soybean, etc.)
+- Includes both diseased and healthy leaves
+- Augmented dataset to maintain class balance
 
-| Class Name | Number of Images |
-| :--- | :--- |
-| Bean_Angular_Leaf_Spot | 700 |
-| Bean_Healthy | 700 |
-| Bean_Rust | 700 |
-| Cotton_Bacterial_Blight | 700 |
-| Cotton_Fusarium_Wilt | 700 |
-| Cotton_Healthy | 700 |
-| Cotton_Leaf_Curl_Virus | 700 |
-| Grape_Bacterial_Rot | 450 |
-| Grape_Black_Rot | 714 |
-| Grape_Downy_Mildew | 708 |
-| Grape_Esca_Black_Measles | 704 |
-| Grape_Healthy | 708 |
-| Grape_Leaf_Blight | 708 |
-| Grape_Powdery_Mildew | 700 |
-| Groundnut_Alternaria_Leaf_Spot | 700 |
-| Groundnut_Early_Leaf_Spot | 700 |
-| Groundnut_Healthy | 700 |
-| Groundnut_Rosette | 450 |
-| Groundnut_Rust | 450 |
-| Maize_Cercospora_Leaf_Spot_Gray | 708 |
-| Maize_Common_Rust | 708 |
-| Maize_Healthy | 708 |
-| Maize_Northern_Leaf_Blight | 708 |
-| Millet_Blast | 708 |
-| Millet_Healthy | 708 |
-| Millet_Rust | 804 |
-| Potato_Early_Blight | 708 |
-| Potato_Healthy | 708 |
-| Potato_Late_Blight | 708 |
-| Sorghum_Anthracnose | 708 |
-| Sorghum_Head_Smut | 700 |
-| Sorghum_Healthy | 748 |
-| Sorghum_Kernel_Smut | 700 |
-| Sorghum_Loose_Smut | 708 |
-| Sorghum_Rust | 708 |
-| Soybean_Healthy | 708 |
-| Soybean_Powdery_Mildew | 450 |
-| Soybean_Sudden_Death_Syndrome | 450 |
-| Soybean_Yellow_Mosaic | 450 |
-| Sugarcane_Bacterial_Blight | 708 |
-| Sugarcane_Healthy | 708 |
-| Sugarcane_Mosaic | 708 |
-| Sugarcane_Red_Rot | 708 |
-| Sugarcane_Rust | 708 |
-| Sugarcane_Yellow | 708 |
-| Tomato_Bacterial_Spot | 700 |
-| Tomato_Early_Blight | 707 |
-| Tomato_Healthy | 705 |
-| Tomato_Late_Blight | 708 |
-| Tomato_Leaf_Curl_Virus | 714 |
-| Tomato_Leaf_Mold | 708 |
-| Tomato_Mosaic_Virus | 714 |
-| Tomato_Septoria_Leaf_Spot | 714 |
-| Tomato_Spider_Mites | 708 |
-| Tomato_Target_Spot | 714 |
-| Wheat_Crown_and_Root_Rot | 700 |
-| Wheat_Healthy | 700 |
-| Wheat_Leaf_Rust | 700 |
-| Wheat_Loose_Smut | 700 |
+---
+
+## Dataset Structure
+
+dataset_augmented/
+│
+├── Tomato_Early_Blight/
+├── Tomato_Healthy/
+├── Wheat_Leaf_Rust/
+├── Sugarcane_Red_Rot/
+├── ...
+└── (59 folders total)
+
+Each folder represents one class.
+
+---
+
+## Training Pipeline
+
+The model was trained using Google Colab with GPU support.
+
+### Environment
+
+- TensorFlow 2.19  
+- Python 3.x  
+- GPU (Colab)
+
+---
+
+## Model Architecture
+
+EfficientNetB3 (pretrained on ImageNet) is used as the backbone.
+
+Architecture:
+
+EfficientNetB3 (Base Model)
+→ GlobalAveragePooling2D  
+→ BatchNormalization  
+→ Dense (512, ReLU)  
+→ Dropout (0.4)  
+→ Dense (256, ReLU)  
+→ Dropout (0.3)  
+→ Dense (59, Softmax)
+
+Total Parameters: ~11.7 Million
+
+---
+
+## Training Strategy
+
+### Data Preprocessing
+
+- Image size: 224 × 224  
+- Batch size: 32  
+- Preprocessing: preprocess_input (EfficientNet)  
+- Train/Validation split: 80% / 20%
+
+---
+
+### Phase 1: Transfer Learning
+
+- Base model frozen  
+- Only top layers trained  
+
+Epochs: 10  
+Learning Rate: 1e-3  
+
+Result:
+- Validation Accuracy: ~88.87%
+
+---
+
+### Phase 2: Fine-Tuning
+
+- Unfreeze top 30 layers of EfficientNetB3  
+- Lower learning rate  
+
+Epochs: 20  
+Learning Rate: 1e-4 (with ReduceLROnPlateau)
+
+Callbacks Used:
+- EarlyStopping  
+- ReduceLROnPlateau  
+- ModelCheckpoint  
+
+---
+
+## Final Results
+
+- Final Validation Accuracy: 93.62%  
+- Validation Loss: 0.3861  
+
+### Evaluation
+
+- Classification Report (Precision, Recall, F1-score)
+![alt text](image.png)
+- Confusion Matrix showing strong diagonal performance (high accuracy across classes)
+![alt text](image-1.png)
+
+---
+
+## Model Saving
+
+```python
+model.save("plant_disease_model.keras")
